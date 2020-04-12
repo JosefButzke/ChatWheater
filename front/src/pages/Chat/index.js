@@ -22,7 +22,7 @@ const Chat = () => {
   useEffect(() => {
     socket.disconnect()
     socket.connect()
-    socket.on('chat', mess => { console.log(mess); setMessages([...messages, mess]) })
+    socket.on('chat', mess => { setMessages([...messages, mess]) })
   }, [messages])
 
   const handleSendMessage = async () => {
@@ -41,7 +41,7 @@ const Chat = () => {
       <ContainerMessages>
         {messages.map((message, index) => (
           <ContainerMessage key={index}>
-            <UserImage side='left' src={message.url_user_image} alt='profile' />
+            <UserImage side={user === message.user ? 'left' : 'right'} src={message.url_user_image} alt='profile' />
             <MessageText>{message.text}</MessageText>
             <TimeText>{formatDistance(new Date(message.time), new Date())} ago</TimeText>
           </ContainerMessage>

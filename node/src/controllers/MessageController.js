@@ -14,7 +14,6 @@ class MessageController {
 
   async store(req, res) {
     const { text, time, user } = req.body;
-    console.log(user)
     const message = await MessageSchema.create({
       text, url_user_image: users[user].path, time, user: user
     });
