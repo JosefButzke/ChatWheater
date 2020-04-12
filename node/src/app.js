@@ -8,26 +8,22 @@ import io from 'socket.io'
 class App {
   constructor() {
     this.app = express()
-    this.server = http.Server(this.app);
+    this.server = http.createServer(this.app);
     mongoose.connect('mongodb+srv://josef:azsxd123@cluster0-hhapj.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
 
+    this.connectedUsers = {}
     this.socket()
 
     this.middlewares()
     this.routes()
-
-    this.connectedUsers = {}
-
   }
 
   socket() {
     this.io = io(this.server)
     this.io.on('connection', socket => {
-      const { user_id } = socket.handshake.query;
-      this.connectedUsers[user_id] = socket.id
-
-      socket, on('disconnect', () => {
-        this.connectedUsers[user_id];
+      this.connectedUsers[socket.id] = { id: socket.id }
+      socket.on('disconnect', () => {
+        delete this.connectedUsers[socket.id]
       })
     })
   }
@@ -36,10 +32,12 @@ class App {
     this.app.use(cors())
     this.app.use(express.json())
 
-    // this.app(use(req, res, next) => {
-    //   req.io = this.socket 
-    //   req.connectedUsers = this.connectedUsers
-    // })
+    this.app.use((req, res, next) => {
+      req.io = this.io;
+      req.connectedUsers = this.connectedUsers
+
+      next()
+    })
   }
 
   routes() {
@@ -47,5 +45,5 @@ class App {
   }
 }
 
-export default new App().app;
+export default new App().server;
 
