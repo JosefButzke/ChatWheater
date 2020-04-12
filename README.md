@@ -9,4 +9,4 @@ Will be application that user send messages from chat to other users and if send
 <p>-Styled Components</p>
 <p>}</p>
 
-<img src="./ScreenShots/front.png" alt="no-image" />
+<img src="./Screenshots/front.png" alt="no-image" />
